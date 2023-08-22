@@ -1,14 +1,14 @@
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import next from "next/types";
+
 
 const prisma = new PrismaClient();
 export const POST = async (request: NextRequest) => {
   const body = await request.json();
-  const { name, email, password } = body.data;
-  console.log(body.data);
-  if (!name || !email || !password) {
+  const { name, email, address, password } = body.data;
+  console.log(name, email, address, password);
+  if (!name || !email || !address || !password) {
     return NextResponse.json("Missing name, email or password", {
       status: 400,
     });
@@ -30,11 +30,11 @@ export const POST = async (request: NextRequest) => {
     data: {
       name,
       email,
-      password,
+      address,
+      password: hashedPassword,
     },
   });
 
   return NextResponse.json(user);
 };
 
-export default POST;

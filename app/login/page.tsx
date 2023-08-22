@@ -4,28 +4,23 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import mark from "@/public/img/mark.svg";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 const RegisterPage = () => {
   const router = useRouter();
   const [data, setData] = useState({
-    name: "",
     email: "",
-    address: "",
     password: "",
   });
 
-  const registerUser = async (e: React.FormEvent<HTMLFormElement>) => {
+  const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ data }),
+    signIn("credentials", {
+      ...data,
+      redirect: false,
     });
-    const userInfo = await response.json();
-    console.log(userInfo);
-    router.push("/login");
+
+    router.push("/dashboard");
   };
 
   return (
@@ -43,29 +38,7 @@ const RegisterPage = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" onSubmit={registerUser}>
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Name
-              </label>
-              <div className="mt-2">
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  value={data.name}
-                  onChange={(e) => {
-                    setData({ ...data, name: e.target.value });
-                  }}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
+          <form className="space-y-6" onSubmit={loginUser}>
             <div>
               <label
                 htmlFor="email"
@@ -80,32 +53,8 @@ const RegisterPage = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  value={data.email}
                   onChange={(e) => {
                     setData({ ...data, email: e.target.value });
-                  }}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="address"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Address
-              </label>
-              <div className="mt-2">
-                <input
-                  id="address"
-                  name="address"
-                  type="text"
-                  autoComplete="address"
-                  required
-                  value={data.address}
-                  onChange={(e) => {
-                    setData({ ...data, address: e.target.value });
                   }}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -149,7 +98,7 @@ const RegisterPage = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Register
+                Login
               </button>
             </div>
           </form>
